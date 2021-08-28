@@ -364,7 +364,7 @@ router.get('/reto', (req, res) => {
     })
 });
 
-router.get('/god', (req, res) => {
+router.get('/god', async (req, res) => {
   let year = 2533;
   let preyearlist = [];
   let preyearsuperlist = [];
@@ -409,7 +409,7 @@ router.get('/god', (req, res) => {
       if (ayear > nextyear) {
         break
       }
-      fetch('https://www.myhora.com/%E0%B8%AB%E0%B8%A7%E0%B8%A2/%E0%B8%9B%E0%B8%B5-' + ayear + '.aspx')
+      await fetch('https://www.myhora.com/%E0%B8%AB%E0%B8%A7%E0%B8%A2/%E0%B8%9B%E0%B8%B5-' + ayear + '.aspx')
         .then(res => res.text())
         .then((body) => {
           var $ = cheerio.load(body);
@@ -565,7 +565,7 @@ router.get('/checklottery', (req, res) => {
     })
 });
 
-router.get('/lastlot', (req, res) => {
+router.get('/lastlot', async (req, res) => {
   let lastdate
   let viewer
   await fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/gdpy?year=' + (new Date().getFullYear() + 543))
@@ -628,7 +628,7 @@ router.get('/getchit', (req, res) => {
     })
 });
 
-router.get('/finddol', (req, res) => {
+router.get('/finddol', async (req, res) => {
   let channels
   let allwin = []
   await fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/god')
