@@ -4,6 +4,9 @@ const path = require('path');
 const serverless = require('serverless-http');
 const app = express();
 const bodyParser = require('body-parser');
+const fetch = require('node-fetch');
+const cheerio = require('cheerio');
+var fs = require('fs');
 
 const router = express.Router();
 
