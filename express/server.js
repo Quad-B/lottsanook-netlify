@@ -21,7 +21,7 @@ function padLeadingZeros(num, size) {
 router.get('/another', (req, res) => res.json({ route: req.originalUrl }));
 router.post('/', (req, res) => res.json({ postBody: req.body }));*/
 
-app.get('/', (req, res) => {
+router.get('/', (req, res) => {
   if(!req.query.date){
       req.query.date=padLeadingZeros(new Date().getDate(), 2) + '' + padLeadingZeros((new Date().getMonth() + 1), 2) + '' + (new Date().getFullYear() + 543)
   }
@@ -342,7 +342,7 @@ app.get('/', (req, res) => {
   }
 })
 
-app.get('/index2', (req, res) => {
+router.get('/index2', (req, res) => {
   try {
       if (req.query.fresh !== undefined) {
           fs.unlinkSync('../tmp/' + req.query.date + '.txt');
@@ -482,7 +482,7 @@ app.get('/index2', (req, res) => {
 
 app.use(bodyParser.json());
 app.use('/.netlify/functions/server', router);  // path must route to lambda
-//app.use('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));
+app.use('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));
 
 module.exports = app;
 module.exports.handler = serverless(app);
