@@ -56,14 +56,14 @@ router.get('/', (req, res) => {
     }
     try {
       if (req.query.fresh !== undefined) {
-        fs.unlinkSync('../tmp/' + req.query.date + '.txt');
+        fs.unlinkSync('/tmp/' + req.query.date + '.txt');
       }
     } catch (err) {
 
     }
     var fileContents = null;
     try {
-      fileContents = fs.readFileSync('../tmp/' + req.query.date + '.txt');
+      fileContents = fs.readFileSync('/tmp/' + req.query.date + '.txt');
     } catch (err) {
 
     }
@@ -194,7 +194,7 @@ router.get('/', (req, res) => {
 router.get('/index2', (req, res) => {
   try {
     if (req.query.fresh !== undefined) {
-      fs.unlinkSync('../tmp/' + req.query.date + '.txt');
+      fs.unlinkSync('/tmp/' + req.query.date + '.txt');
     }
   } catch (err) {
 
@@ -202,7 +202,7 @@ router.get('/index2', (req, res) => {
   let monthtext
   var fileContents = null;
   try {
-    fileContents = fs.readFileSync('../tmp/' + req.query.date + '.txt');
+    fileContents = fs.readFileSync('/tmp/' + req.query.date + '.txt');
   } catch (err) {
 
   }
@@ -279,7 +279,7 @@ router.get('/index2', (req, res) => {
           }
         }
         if ($('div').toArray()[2].firstChild.data.match('~[0-9]+~')) {
-          fs.writeFile('../tmp/' + req.query.date + '.txt', JSON.stringify(data), function (err) {
+          fs.writeFile('/tmp/' + req.query.date + '.txt', JSON.stringify(data), function (err) {
             if (err) throw err;
             //console.log('Saved!');
             if (req.query.from !== undefined) {
