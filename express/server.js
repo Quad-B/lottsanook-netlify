@@ -5,11 +5,11 @@ const serverless = require('serverless-http');
 const app = express();
 const bodyParser = require('body-parser');
 
+require('encoding');
+
 const fetch = request('node-fetch').default;
 const cheerio = require('cheerio');
 var fs = require('fs');
-
-require('encoding');
 
 const router = express.Router();
 
