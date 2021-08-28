@@ -12,6 +12,7 @@ const cheerio = require('cheerio');
 var fs = require('fs');
 
 const router = express.Router();
+const port = process.env.PORT || 3000;
 
 function padLeadingZeros(num, size) {
   var s = num + "";
@@ -345,6 +346,24 @@ router.get('/index2', (req, res) => {
   res.end();*/
 });
 
+router.get('/reto', (req, res) => {
+  fetch('http://localhost:' + port + '/?date=' + padLeadingZeros(new Date().getDate(), 2) + '' + padLeadingZeros((new Date().getMonth() + 1), 2) + '' + (new Date().getFullYear() + 543))
+    .then(res => res.json())
+    .then((body) => {
+      if (body[0][1] === "XXXXXX" || body[0][1] === "xxxxxx") {
+        //res.send('yes')
+        res.writeHead(200, { 'Content-Type': 'text/plain' });
+        res.write('yes');
+        res.end();
+      } else {
+        //res.send('no')
+        res.writeHead(200, { 'Content-Type': 'text/plain' });
+        res.write('no');
+        res.end();
+      }
+    })
+});
+
 /*router.get('/another', (req, res) => res.json({ route: req.originalUrl }));
 router.post('/', (req, res) => res.json({ postBody: req.body }));*/
 
@@ -352,6 +371,7 @@ app.use(bodyParser.json());
 app.use('/.netlify/functions/server', router);  // path must route to lambda
 app.use('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));
 app.use('/index2', (req, res) => res.sendFile(path.join(__dirname, '../index2.html')));
+app.use('/reto', (req, res) => res.sendFile(path.join(__dirname, '../reto.html')));
 
 module.exports = app;
 module.exports.handler = serverless(app);
