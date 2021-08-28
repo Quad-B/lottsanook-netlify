@@ -347,7 +347,7 @@ router.get('/index2', (req, res) => {
 });
 
 router.get('/reto', (req, res) => {
-  fetch('http://localhost/?date=' + padLeadingZeros(new Date().getDate(), 2) + '' + padLeadingZeros((new Date().getMonth() + 1), 2) + '' + (new Date().getFullYear() + 543))
+  fetch('http://localhost/.netlify/functions/server/?date=' + padLeadingZeros(new Date().getDate(), 2) + '' + padLeadingZeros((new Date().getMonth() + 1), 2) + '' + (new Date().getFullYear() + 543))
     .then(res => res.json())
     .then((body) => {
       if (body[0][1] === "XXXXXX" || body[0][1] === "xxxxxx") {
