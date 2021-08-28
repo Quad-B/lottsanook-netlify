@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 
 require('encoding')
 
-const fetch = request('node-fetch')
+const fetch = require('node-fetch')
 const cheerio = require('cheerio')
 var fs = require('fs')
 
