@@ -162,7 +162,7 @@ router.get('/', (req, res) => {
           }
 
           if ($('div').toArray()[2].firstChild.data != null && $('div').toArray()[2].firstChild.data != ' เวลา 14:30-16:00น.') {
-            fs.appendFile('../tmp/' + req.query.date + '.txt', JSON.stringify(data), function (err) {
+            fs.appendFile('/tmp/' + req.query.date + '.txt', JSON.stringify(data), function (err) {
               if (err) throw err;
               //console.log('Saved!');
               if (req.query.from !== undefined) {
