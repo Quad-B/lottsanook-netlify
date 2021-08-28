@@ -9,7 +9,7 @@ try {
 } catch (error) {
   //console.error(error);
 }
-import fetch from require('node-fetch');
+import fetch from "node-fetch";
 const cheerio = require('cheerio');
 var fs = require('fs');
 
