@@ -26,13 +26,13 @@ router.get('/', (req, res) => {
   }
   if (req.query.date.substring(4, 8) == new Date().getFullYear() + 543) {
     if (req.query.from !== undefined) {
-      fetch('https://lotapi2.pwisetthon.com/.netlify/functions/server/index2?date=' + req.query.date + '&from')
+      fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/index2?date=' + req.query.date + '&from')
         .then(res => res.json())
         .then((body) => {
           res.send(body)
         })
     } else {
-      fetch('https://lotapi2.pwisetthon.com/.netlify/functions/server/index2?date=' + req.query.date)
+      fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/index2?date=' + req.query.date)
         .then(res => res.json())
         .then((body) => {
           res.send(body)
@@ -347,7 +347,7 @@ router.get('/index2', (req, res) => {
 });
 
 router.get('/reto', (req, res) => {
-  fetch('http://localhost/.netlify/functions/server/?date=' + padLeadingZeros(new Date().getDate(), 2) + '' + padLeadingZeros((new Date().getMonth() + 1), 2) + '' + (new Date().getFullYear() + 543))
+  fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/?date=' + padLeadingZeros(new Date().getDate(), 2) + '' + padLeadingZeros((new Date().getMonth() + 1), 2) + '' + (new Date().getFullYear() + 543))
     .then(res => res.json())
     .then((body) => {
       if (body[0][1] === "XXXXXX" || body[0][1] === "xxxxxx") {
@@ -362,6 +362,300 @@ router.get('/reto', (req, res) => {
         res.end();
       }
     })
+});
+
+router.get('/god', (req, res) => {
+  let year = 2533;
+  let preyearlist = [];
+  let preyearsuperlist = [];
+  let yearlist = [];
+  let nextyear = new Date().getFullYear() + 543;
+  let channel = [];
+  //let jdata
+  let countloveme = 0
+  var fileContents = null;
+  try {
+    fileContents = fs.readFileSync('/tmp/cache.txt');
+  } catch (err) {
+  }
+  if (fileContents) {
+    yearlist = JSON.parse(fileContents);
+    if (
+      yearlist[yearlist.length - 1].substring(4, 8) ==
+      new Date().getFullYear() + 543
+    ) {
+      year = new Date().getFullYear() + 543;
+    } else {
+      year = yearlist[yearlist.length - 1].substring(4, 8)
+    }
+    yearlist.forEach(function (value, i) {
+      if (
+        value.substring(4, 8) ==
+        year
+      ) {
+        countloveme--;
+      }
+    });
+    yearlist.splice(countloveme);
+  }
+  let day
+  while (year <= nextyear) {
+    channel = []
+    for (let i = 0; i < 10; i++) {
+      preyearsuperlist = [];
+      preyearlist = [];
+      let peryear = [];
+      let ayear = year + i
+      if (ayear > nextyear) {
+        break
+      }
+      await fetch('https://www.myhora.com/%E0%B8%AB%E0%B8%A7%E0%B8%A2/%E0%B8%9B%E0%B8%B5-' + ayear + '.aspx')
+        .then(res => res.text())
+        .then((body) => {
+          var $ = cheerio.load(body);
+          for (const val of $('font').toArray()) {
+            if (val.firstChild.data.indexOf('ตรวจสลากกินแบ่งรัฐบาล') > -1) {
+              day = val.firstChild.data.split(" ").splice(2)
+              let monthnum
+              switch (day[2]) {
+                case 'มกราคม': monthnum = "01"; break;
+                case 'กุมภาพันธ์': monthnum = "02"; break;
+                case 'มีนาคม': monthnum = "03"; break;
+                case 'เมษายน': monthnum = "04"; break;
+                case 'พฤษภาคม': monthnum = "05"; break;
+                case 'มิถุนายน': monthnum = "06"; break;
+                case 'กรกฎาคม': monthnum = "07"; break;
+                case 'สิงหาคม': monthnum = "08"; break;
+                case 'กันยายน': monthnum = "09"; break;
+                case 'ตุลาคม': monthnum = "10"; break;
+                case 'พฤศจิกายน': monthnum = "11"; break;
+                case 'ธันวาคม': monthnum = "12"; break;
+              }
+              peryear.unshift(padLeadingZeros(day[0], 2) + monthnum + day[3])
+              preyearsuperlist.unshift(padLeadingZeros(day[0], 2) + monthnum + day[3])
+            }
+          }
+          for (const val of peryear) {
+            yearlist.push(val)
+          }
+          for (const val of preyearsuperlist) {
+            preyearlist.push(val)
+            try {
+              if (day[3] == new Date().getFullYear() + 543) {
+                fs.unlinkSync('/tmp/' + req.query.date + '.txt');
+                console.log('yes this year')
+              }
+            } catch (err) {
+
+            }
+            fs.writeFile('/tmp/' + day[3] + '.txt', JSON.stringify(preyearlist), function (err) {
+              if (err) throw err;
+            });
+          }
+        })
+    }
+    year += 10
+  }
+  fs.writeFile('/tmp/cache.txt', JSON.stringify(yearlist), function (err) {
+    if (err) throw err;
+    //res.send(yearlist)
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.write(JSON.stringify(yearlist));
+    res.end();
+  });
+});
+
+router.get('/gdpy', (req, res) => {
+  let peryear = []
+  let yearlist = []
+  var fileContents = null;
+  try {
+    if (req.query.year == new Date().getFullYear() + 543) {
+      fs.unlinkSync('/tmp/' + req.query.year + '.txt');
+      console.log('yes this year')
+    }
+    fileContents = fs.readFileSync('/tmp/' + req.query.year + '.txt');
+  } catch (err) {
+
+  }
+  if (fileContents) {
+    res.send(JSON.parse(fileContents));
+  } else {
+    fetch('https://www.myhora.com/%E0%B8%AB%E0%B8%A7%E0%B8%A2/%E0%B8%9B%E0%B8%B5-' + req.query.year + '.aspx')
+      .then(res => res.text())
+      .then((body) => {
+        var $ = cheerio.load(body);
+        for (const val of $('font').toArray()) {
+          if (val.firstChild.data.indexOf("ตรวจสลากกินแบ่งรัฐบาล") > -1) {
+            let day = val.firstChild.data.split(" ").splice(2)
+            let monthnum
+            switch (day[2]) {
+              case 'มกราคม': monthnum = "01"; break;
+              case 'กุมภาพันธ์': monthnum = "02"; break;
+              case 'มีนาคม': monthnum = "03"; break;
+              case 'เมษายน': monthnum = "04"; break;
+              case 'พฤษภาคม': monthnum = "05"; break;
+              case 'มิถุนายน': monthnum = "06"; break;
+              case 'กรกฎาคม': monthnum = "07"; break;
+              case 'สิงหาคม': monthnum = "08"; break;
+              case 'กันยายน': monthnum = "09"; break;
+              case 'ตุลาคม': monthnum = "10"; break;
+              case 'พฤศจิกายน': monthnum = "11"; break;
+              case 'ธันวาคม': monthnum = "12"; break;
+            }
+            peryear.unshift(padLeadingZeros(day[0], 2) + monthnum + day[3])
+          }
+        }
+        for (const val of peryear) {
+          yearlist.push(val)
+        }
+        fs.writeFile('/tmp/' + req.query.year + '.txt', JSON.stringify(yearlist), function (err) {
+          if (err) throw err;
+          //res.send(yearlist)
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.write(JSON.stringify(yearlist));
+          res.end();
+        });
+      })
+  }
+});
+
+router.get('/checklottery', (req, res) => {
+  let result = ""
+  fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/?date=' + req.query.by)
+    .then(res => res.json())
+    .then((body) => {
+      body.forEach(function (val, x) {
+        val.forEach(function (superval, y) {
+          if (superval == req.query.search || superval == req.query.search.substr(0, 3) || superval == req.query.search.substr(3, 6) || superval == req.query.search.substr(4, 6) && y != 0) {
+            if (x == 0) {
+              result = result + "111111,";
+            }
+            if (x == 1) {
+              result = result + "333000,";
+            }
+            if (x == 2) {
+              result = result + "000333,";
+            }
+            if (x == 3) {
+              result = result + "000022,";
+            }
+            if (x == 4) {
+              result = result + "111112,";
+            }
+            if (x == 5) {
+              result = result + "222222,";
+            }
+            if (x == 6) {
+              result = result + "333333,";
+            }
+            if (x == 7) {
+              result = result + "444444,";
+            }
+            if (x == 8) {
+              result = result + "555555,";
+            }
+          }
+        })
+      })
+      //res.send(result.substring(0, result.length - 1))
+      res.writeHead(200, { 'Content-Type': 'text/plain' });
+      res.write(result.substring(0, result.length - 1));
+      res.end();
+    })
+});
+
+router.get('/lastlot', (req, res) => {
+  let lastdate
+  let viewer
+  await fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/gdpy?year=' + (new Date().getFullYear() + 543))
+    .then(res => res.json())
+    .then((body) => {
+      lastdate = body[body.length - 1]
+    })
+  await fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/?date=' + lastdate)
+    .then(res => res.json())
+    .then((body) => {
+      if (req.query.info !== undefined) {
+        viewer = {
+          info: {
+            date: lastdate
+          },
+          win: body[0][1],
+          threefirst: body[1][1] + ',' + body[1][2],
+          threeend: body[2][1] + ',' + body[2][2],
+          twoend: body[3][1]
+        }
+      } else {
+        viewer = {
+          win: body[0][1],
+          threefirst: body[1][1] + ',' + body[1][2],
+          threeend: body[2][1] + ',' + body[2][2],
+          twoend: body[3][1]
+        }
+      }
+      //res.send(viewer)
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.write(JSON.stringify(viewer));
+      res.end();
+    })
+});
+
+router.get('/getchit', (req, res) => {
+  let a = []
+  fetch('https://www.huayvips.com/luckynumber/')
+    .then(res => res.text())
+    .then((body) => {
+      let $ = cheerio.load(body)
+      for (const val of $('img').toArray()) {
+        if (val.attribs.src.indexOf('TL') > -1) {
+          a.push(val.attribs.src)
+        }
+        if (val.attribs.src.indexOf('DN') > -1) {
+          a.push(val.attribs.src)
+        }
+        if (val.attribs.src.indexOf('BT') > -1) {
+          a.push(val.attribs.src)
+        }
+        if (a.length == 3) {
+          //res.send(a)
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.write(JSON.stringify(a));
+          res.end();
+          return
+        }
+      }
+    })
+});
+
+router.get('/finddol', (req, res) => {
+  let channels
+  let allwin = []
+  await fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/god')
+    .then(res => res.json())
+    .then((body) => {
+      channels = body.splice(408)
+      console.log(channels)
+    })
+  for (const val of channels) {
+    console.log(val)
+    await fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/?date=' + val + '&from')
+      .then(res => res.json())
+      .then((body) => {
+        for (let index = 0; index < body.length; index++) {
+          const element = body[index];
+          if (element.includes(req.query.search.toString())) {
+            allwin.push(body[0][0])
+            console.log('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/?date=' + val + '&from')
+          }
+        }
+
+      })
+  }
+  //res.send(allwin)
+  res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.write(JSON.stringify(allwin));
+          res.end();
 });
 
 /*router.get('/another', (req, res) => res.json({ route: req.originalUrl }));
