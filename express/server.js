@@ -4,11 +4,7 @@ const path = require('path');
 const serverless = require('serverless-http');
 const app = express();
 const bodyParser = require('body-parser');
-try {
-  require('encoding');
-} catch (error) {
-  //console.error(error);
-}
+require('encoding');
 const fetch = require('node-fetch');
 const cheerio = require('cheerio');
 var fs = require('fs');
