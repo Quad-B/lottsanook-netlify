@@ -409,7 +409,7 @@ router.get('/god', (req, res) => {
       if (ayear > nextyear) {
         break
       }
-      await fetch('https://www.myhora.com/%E0%B8%AB%E0%B8%A7%E0%B8%A2/%E0%B8%9B%E0%B8%B5-' + ayear + '.aspx')
+      fetch('https://www.myhora.com/%E0%B8%AB%E0%B8%A7%E0%B8%A2/%E0%B8%9B%E0%B8%B5-' + ayear + '.aspx')
         .then(res => res.text())
         .then((body) => {
           var $ = cheerio.load(body);
