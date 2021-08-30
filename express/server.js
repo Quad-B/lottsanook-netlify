@@ -375,8 +375,13 @@ router.get('/god', async (req, res) => {
   let countloveme = 0
   var fileContents = null;
   try {
-    fileContents = fs.readFileSync('/tmp/cache.txt');
+    fileContents = fs.readFileSync('../tmp/cache.txt');
   } catch (err) {
+  }
+  if (fileContents) {
+    fs.writeFile('/tmp/cache.txt', fileContents, function (err) {
+      if (err) throw err;
+    });
   }
   if (fileContents) {
     yearlist = JSON.parse(fileContents);
