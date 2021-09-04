@@ -463,7 +463,7 @@ router.get('/god', async (req, res) => {
     res.write(JSON.stringify(yearlist));
     res.end();
   });*/
-  fetch('https://raw.githubusercontent.com/boyphongsakorn/testrepo/main/god'))
+  await fetch('https://raw.githubusercontent.com/boyphongsakorn/testrepo/main/god')
     .then(res => res.json())
     .then((body) => {
       res.writeHead(200, { 'Content-Type': 'application/json' });
