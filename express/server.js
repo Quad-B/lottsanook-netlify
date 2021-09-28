@@ -638,31 +638,43 @@ router.get('/finddol', async (req, res) => {
   let channels
   let allwin = []
   if (req.query.search.length > 3) {
-  await fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/god')
-    .then(res => res.json())
-    .then((body) => {
-      channels = body.splice(408)
-      console.log(channels)
-    })
-  for (const val of channels) {
-    console.log(val)
-    await fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/?date=' + val + '&from')
+    /*await fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/god')
       .then(res => res.json())
       .then((body) => {
-        for (let index = 0; index < body.length; index++) {
-          const element = body[index];
-          if (element.includes(req.query.search.toString())) {
-            allwin.push(body[0][0])
-            console.log('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/?date=' + val + '&from')
-          }
-        }
-
+        channels = body.splice(408)
+        console.log(channels)
       })
-  }
-  //res.send(allwin)
-  res.writeHead(200, { 'Content-Type': 'application/json' });
-  res.write(JSON.stringify(allwin));
-  res.end();
+    for (const val of channels) {
+      console.log(val)
+      await fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/?date=' + val + '&from')
+        .then(res => res.json())
+        .then((body) => {
+          for (let index = 0; index < body.length; index++) {
+            const element = body[index];
+            if (element.includes(req.query.search.toString())) {
+              allwin.push(body[0][0])
+              console.log('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/?date=' + val + '&from')
+            }
+          }
+
+        })
+    }
+    //res.send(allwin)
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.write(JSON.stringify(allwin));
+    res.end();*/
+    await fetch('https://raw.githubusercontent.com/boyphongsakorn/testrepo/main/tmp/'+req.query.search.toString())
+      .then(res => res.json())
+      .then((body) => {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.write(body);
+        res.end();
+      }).catch((err) => {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.write('[]');
+        res.end();
+        console.log(err)
+      });
   } else {
         fetch('https://astro.meemodel.com/%E0%B8%A7%E0%B8%B4%E0%B9%80%E0%B8%84%E0%B8%A3%E0%B8%B2%E0%B8%B0%E0%B8%AB%E0%B9%8C%E0%B9%80%E0%B8%A5%E0%B8%82%E0%B8%AB%E0%B8%A7%E0%B8%A2/' + req.query.search, { redirect: 'error' })
             .then(res => res.text())
