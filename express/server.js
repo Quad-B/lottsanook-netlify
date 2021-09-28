@@ -667,7 +667,7 @@ router.get('/finddol', async (req, res) => {
       .then(res => res.json())
       .then((body) => {
         res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.write(body);
+        res.write(JSON.stringify(body));
         res.end();
       }).catch((err) => {
         res.writeHead(200, { 'Content-Type': 'application/json' });
