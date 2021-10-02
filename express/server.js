@@ -670,18 +670,44 @@ router.get('/finddol', async (req, res) => {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.write(JSON.stringify(allwin));
     res.end();*/
-    await fetch('https://raw.githubusercontent.com/boyphongsakorn/testrepo/main/tmp/'+req.query.search.toString())
-      .then(res => res.json())
-      .then((body) => {
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.write(JSON.stringify(body));
-        res.end();
-      }).catch((err) => {
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.write('[]');
-        res.end();
-        console.log(err)
-      });
+    var myHeaders = new Headers();
+    myHeaders.append("Accept", "application/vnd.github.v3+json");
+    myHeaders.append("Authorization", "token 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");
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+     "inputs": {
+        "number": req.query.search.toString()
+     },
+     "ref": "refs/heads/main"
+    });
+
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    };
+
+    await fetch("https://api.github.com/repos/boyphongsakorn/testrepo/actions/workflows/blank.yml/dispatches", requestOptions)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
+    
+    setTimeout(function () {
+      await fetch('https://raw.githubusercontent.com/boyphongsakorn/testrepo/main/tmp/'+req.query.search.toString())
+        .then(res => res.json())
+        .then((body) => {
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.write(JSON.stringify(body));
+          res.end();
+        }).catch((err) => {
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.write('[]');
+          res.end();
+          console.log(err)
+        });
+      }, 40000)
   } else {
         fetch('https://astro.meemodel.com/%E0%B8%A7%E0%B8%B4%E0%B9%80%E0%B8%84%E0%B8%A3%E0%B8%B2%E0%B8%B0%E0%B8%AB%E0%B9%8C%E0%B9%80%E0%B8%A5%E0%B8%82%E0%B8%AB%E0%B8%A7%E0%B8%A2/' + req.query.search, { redirect: 'error' })
             .then(res => res.text())
