@@ -470,12 +470,12 @@ router.get('/god', async (req, res) => {
     res.end();
   });*/
   fetch('https://raw.githubusercontent.com/boyphongsakorn/testrepo/main/god')
-        .then(res => res.json())
-        .then((body) => {
-            res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.write(JSON.stringify(body));
-            res.end();
-        })
+    .then(res => res.json())
+    .then((body) => {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.write(JSON.stringify(body));
+      res.end();
+    })
 });
 
 router.get('/gdpy', (req, res) => {
@@ -645,40 +645,26 @@ router.get('/finddol', async (req, res) => {
   let channels
   let allwin = []
   if (req.query.search.length > 3) {
-    /*await fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/god')
+    await fetch('https://raw.githubusercontent.com/boyphongsakorn/testrepo/main/tmp/' + req.query.search.toString())
       .then(res => res.json())
       .then((body) => {
-        channels = body.splice(408)
-        console.log(channels)
-      })
-    for (const val of channels) {
-      console.log(val)
-      await fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/?date=' + val + '&from')
-        .then(res => res.json())
-        .then((body) => {
-          for (let index = 0; index < body.length; index++) {
-            const element = body[index];
-            if (element.includes(req.query.search.toString())) {
-              allwin.push(body[0][0])
-              console.log('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/?date=' + val + '&from')
-            }
-          }
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.write(JSON.stringify(body));
+        res.end();
+      }).catch((err) => {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.write('[]');
+        res.end();
+        console.log(err)
+        var https = require('follow-redirects').https;
 
-        })
-    }
-    //res.send(allwin)
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.write(JSON.stringify(allwin));
-    res.end();*/
-    var https = require('follow-redirects').https;
-
-    var options = {
-      'method': 'POST',
-      'hostname': 'api.github.com',
-      'path': '/repos/boyphongsakorn/testrepo/actions/workflows/blank.yml/dispatches',
+        var options = {
+          'method': 'POST',
+          'hostname': 'api.github.com',
+          'path': '/repos/boyphongsakorn/testrepo/actions/workflows/blank.yml/dispatches',
           'headers': {
             'Accept': 'application/vnd.github.v3+json',
-            'Authorization': 'token '+process.env.gtoken,
+            'Authorization': 'token ' + process.env.gtoken,
             'Content-Type': 'application/json',
             'User-Agent': 'PostmanRuntime/7.28.4'
           },
@@ -712,37 +698,25 @@ router.get('/finddol', async (req, res) => {
         reqtwo.write(postData);
 
         reqtwo.end();
-    
-      await fetch('https://raw.githubusercontent.com/boyphongsakorn/testrepo/main/tmp/'+req.query.search.toString())
-        .then(res => res.json())
-        .then((body) => {
-          res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.write(JSON.stringify(body));
-          res.end();
-        }).catch((err) => {
-          res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.write('[]');
-          res.end();
-          console.log(err)
-        });
+      });
   } else {
-        fetch('https://astro.meemodel.com/%E0%B8%A7%E0%B8%B4%E0%B9%80%E0%B8%84%E0%B8%A3%E0%B8%B2%E0%B8%B0%E0%B8%AB%E0%B9%8C%E0%B9%80%E0%B8%A5%E0%B8%82%E0%B8%AB%E0%B8%A7%E0%B8%A2/' + req.query.search, { redirect: 'error' })
-            .then(res => res.text())
-            .then((body) => {
-                let $ = cheerio.load(body)
-                $('td').toArray().forEach(element => {
-                    let sl = element.firstChild.data
-                    if(sl != null && sl.split(" ").length == 3 && sl.split(" ")[2] >= 2550){
-                        allwin.unshift(sl)
-                    }
-                    
-                });
-                //res.send(allwin)
-                res.writeHead(200, { 'Content-Type': 'application/json' });
-                res.write(JSON.stringify(allwin));
-                res.end();
-            });
-    }
+    fetch('https://astro.meemodel.com/%E0%B8%A7%E0%B8%B4%E0%B9%80%E0%B8%84%E0%B8%A3%E0%B8%B2%E0%B8%B0%E0%B8%AB%E0%B9%8C%E0%B9%80%E0%B8%A5%E0%B8%82%E0%B8%AB%E0%B8%A7%E0%B8%A2/' + req.query.search, { redirect: 'error' })
+      .then(res => res.text())
+      .then((body) => {
+        let $ = cheerio.load(body)
+        $('td').toArray().forEach(element => {
+          let sl = element.firstChild.data
+          if (sl != null && sl.split(" ").length == 3 && sl.split(" ")[2] >= 2550) {
+            allwin.unshift(sl)
+          }
+
+        });
+        //res.send(allwin)
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.write(JSON.stringify(allwin));
+        res.end();
+      });
+  }
 });
 
 /*router.get('/another', (req, res) => res.json({ route: req.originalUrl }));
