@@ -472,13 +472,38 @@ router.get('/god', async (req, res) => {
     res.write(JSON.stringify(yearlist));
     res.end();
   });*/
-  fetch('https://raw.githubusercontent.com/boyphongsakorn/testrepo/main/god')
+  if(req.query.format == "thtext"){
+        fetch('https://raw.githubusercontent.com/boyphongsakorn/testrepo/main/godthtext')
+        .then(res => res.json())
+        .then((body) => {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.write(JSON.stringify(body));
+            res.end();
+        })
+    }else if(req.query.format == "combothtext"){
+        fetch('https://raw.githubusercontent.com/boyphongsakorn/testrepo/main/godcombothtext')
+        .then(res => res.json())
+        .then((body) => {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.write(JSON.stringify(body));
+            res.end();
+        })
+    }else{
+        fetch('https://raw.githubusercontent.com/boyphongsakorn/testrepo/main/god')
+        .then(res => res.json())
+        .then((body) => {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.write(JSON.stringify(body));
+            res.end();
+        })
+    }
+  /*fetch('https://raw.githubusercontent.com/boyphongsakorn/testrepo/main/god')
     .then(res => res.json())
     .then((body) => {
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.write(JSON.stringify(body));
       res.end();
-    })
+    })*/
 });
 
 router.get('/gdpy', (req, res) => {
