@@ -21,8 +21,8 @@ function padLeadingZeros(num, size) {
 }
 
 router.get('/', (req, res) => {
-    var raw
-    if (req.query.date.substring(4, 8) == new Date().getFullYear() + 543) {
+  var raw
+  /*if (req.query.date.substring(4, 8) == new Date().getFullYear() + 543) {
     if (req.query.from !== undefined) {
       fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/index3?date=' + req.query.date + '&from')
         .then(res => res.json())
@@ -36,116 +36,132 @@ router.get('/', (req, res) => {
           res.send(body)
         })
     }
-  } else {
+  } else {*/
     if (!req.query.date) {
-        raw = JSON.stringify({
-            date: padLeadingZeros(new Date().getDate(), 2),
-            month: padLeadingZeros((new Date().getMonth() + 1), 2),
-            year: new Date().getFullYear()
-        });
+      raw = JSON.stringify({
+        date: padLeadingZeros(new Date().getDate(), 2),
+        month: padLeadingZeros((new Date().getMonth() + 1), 2),
+        year: new Date().getFullYear()
+      });
     } else {
-        raw = JSON.stringify({
-            date: req.query.date.substr(0, 2),
-            month: req.query.date.substr(2, 2),
-            year: parseInt(req.query.date.substr(4, 4)) - 543
-        });
+      raw = JSON.stringify({
+        date: req.query.date.substr(0, 2),
+        month: req.query.date.substr(2, 2),
+        year: parseInt(req.query.date.substr(4, 4)) - 543
+      });
     }
     var requestOptions = {
-        method: 'POST',
-        headers: { "Content-Type": "application/json" },
-        body: raw,
-        redirect: 'follow'
+      method: 'POST',
+      headers: { "Content-Type": "application/json" },
+      body: raw,
+      redirect: 'follow'
     };
 
     fetch("https://www.glo.or.th/api/lottery/getLotteryAward", requestOptions)
-        .then(response => response.json())
-        .then(result => {
-            let data = [["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0], ["\u0e40\u0e25\u0e02\u0e2b\u0e19\u0e49\u0e323\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e223\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e222\u0e15\u0e31\u0e27", 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e02\u0e49\u0e32\u0e07\u0e40\u0e04\u0e35\u0e22\u0e07\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e482", 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e483", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e484", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e485", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-            data[0][1] = result["response"]["data"]["first"]["number"][0]["value"]
-            for (let [index, val] of result["response"]["data"]["last3f"]["number"].entries()) {
-                data[1][index + 1] = val["value"]
-            }
-            for (let [index, val] of result["response"]["data"]["last3b"]["number"].entries()) {
-                data[2][index + 1] = val["value"]
-            }
-            data[3][1] = result["response"]["data"]["last2"]["number"][0]["value"]
-            for (let [index, val] of result["response"]["data"]["near1"]["number"].entries()) {
-                data[4][index + 1] = val["value"]
-            }
-            for (let [index, val] of result["response"]["data"]["second"]["number"].entries()) {
-                data[5][index + 1] = val["value"]
-            }
-            for (let [index, val] of result["response"]["data"]["third"]["number"].entries()) {
-                data[6][index + 1] = val["value"]
-            }
-            for (let [index, val] of result["response"]["data"]["fourth"]["number"].entries()) {
-                data[7][index + 1] = val["value"]
-            }
-            for (let [index, val] of result["response"]["data"]["fifth"]["number"].entries()) {
-                data[8][index + 1] = val["value"]
-            }
-            if (req.query.from !== undefined) {
-                switch (req.query.date.substr(2, 2)) {
-                    case '01':
-                        monthtext = "มกราคม";
-                        break;
-                    case '02':
-                        monthtext = "กุมภาพันธ์";
-                        break;
-                    case '03':
-                        monthtext = "มีนาคม";
-                        break;
-                    case '04':
-                        monthtext = "เมษายน";
-                        break;
-                    case '05':
-                        monthtext = "พฤษภาคม";
-                        break;
-                    case '06':
-                        monthtext = "มิถุนายน";
-                        break;
-                    case '07':
-                        monthtext = "กรกฎาคม";
-                        break;
-                    case '08':
-                        monthtext = "สิงหาคม";
-                        break;
-                    case '09':
-                        monthtext = "กันยายน";
-                        break;
-                    case '10':
-                        monthtext = "ตุลาคม";
-                        break;
-                    case '11':
-                        monthtext = "พฤศจิกายน";
-                        break;
-                    case '12':
-                        monthtext = "ธันวาคม";
-                        break;
-                }
+      .then(response => response.json())
+      .then(result => {
+        if(result["response"] != null) {
+        let data = [["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0], ["\u0e40\u0e25\u0e02\u0e2b\u0e19\u0e49\u0e323\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e223\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e222\u0e15\u0e31\u0e27", 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e02\u0e49\u0e32\u0e07\u0e40\u0e04\u0e35\u0e22\u0e07\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e482", 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e483", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e484", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e485", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+        data[0][1] = result["response"]["data"]["first"]["number"][0]["value"]
+        for (let [index, val] of result["response"]["data"]["last3f"]["number"].entries()) {
+          data[1][index + 1] = val["value"]
+        }
+        for (let [index, val] of result["response"]["data"]["last3b"]["number"].entries()) {
+          data[2][index + 1] = val["value"]
+        }
+        data[3][1] = result["response"]["data"]["last2"]["number"][0]["value"]
+        for (let [index, val] of result["response"]["data"]["near1"]["number"].entries()) {
+          data[4][index + 1] = val["value"]
+        }
+        for (let [index, val] of result["response"]["data"]["second"]["number"].entries()) {
+          data[5][index + 1] = val["value"]
+        }
+        for (let [index, val] of result["response"]["data"]["third"]["number"].entries()) {
+          data[6][index + 1] = val["value"]
+        }
+        for (let [index, val] of result["response"]["data"]["fourth"]["number"].entries()) {
+          data[7][index + 1] = val["value"]
+        }
+        for (let [index, val] of result["response"]["data"]["fifth"]["number"].entries()) {
+          data[8][index + 1] = val["value"]
+        }
+        if (req.query.from !== undefined) {
+          switch (req.query.date.substr(2, 2)) {
+            case '01':
+              monthtext = "มกราคม";
+              break;
+            case '02':
+              monthtext = "กุมภาพันธ์";
+              break;
+            case '03':
+              monthtext = "มีนาคม";
+              break;
+            case '04':
+              monthtext = "เมษายน";
+              break;
+            case '05':
+              monthtext = "พฤษภาคม";
+              break;
+            case '06':
+              monthtext = "มิถุนายน";
+              break;
+            case '07':
+              monthtext = "กรกฎาคม";
+              break;
+            case '08':
+              monthtext = "สิงหาคม";
+              break;
+            case '09':
+              monthtext = "กันยายน";
+              break;
+            case '10':
+              monthtext = "ตุลาคม";
+              break;
+            case '11':
+              monthtext = "พฤศจิกายน";
+              break;
+            case '12':
+              monthtext = "ธันวาคม";
+              break;
+          }
 
-                data[0][0] = req.query.date.substring(0, 2) + monthtext + req.query.date.substring(4, 8)
-            }
-            res.send(data)
-        })
-        .catch(error => {
-            /*let data = [["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0], ["\u0e40\u0e25\u0e02\u0e2b\u0e19\u0e49\u0e323\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e223\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e222\u0e15\u0e31\u0e27", 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e02\u0e49\u0e32\u0e07\u0e40\u0e04\u0e35\u0e22\u0e07\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e482", 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e483", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e484", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e485", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-            res.send(data)*/
-            if (req.query.from !== undefined) {
-                fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/index2?date=' + req.query.date + '&from')
-                    .then(res => res.json())
-                    .then((body) => {
-                        res.send(body)
-                    })
-            } else {
-                fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/index2?date=' + req.query.date)
-                    .then(res => res.json())
-                    .then((body) => {
-                        res.send(body)
-                    })
-            }
-        });
-  }
+          data[0][0] = req.query.date.substring(0, 2) + monthtext + req.query.date.substring(4, 8)
+        }
+        res.send(data)
+        }else{
+          if (req.query.from !== undefined) {
+            fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/index3?date=' + req.query.date + '&from')
+              .then(res => res.json())
+              .then((body) => {
+                res.send(body)
+              })
+          } else {
+            fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/index3?date=' + req.query.date)
+              .then(res => res.json())
+              .then((body) => {
+                res.send(body)
+              })
+          }
+        }
+      })
+      .catch(error => {
+        /*let data = [["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0], ["\u0e40\u0e25\u0e02\u0e2b\u0e19\u0e49\u0e323\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e223\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e222\u0e15\u0e31\u0e27", 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e02\u0e49\u0e32\u0e07\u0e40\u0e04\u0e35\u0e22\u0e07\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e482", 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e483", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e484", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e485", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+        res.send(data)*/
+        if (req.query.from !== undefined) {
+          fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/index3?date=' + req.query.date + '&from')
+            .then(res => res.json())
+            .then((body) => {
+              res.send(body)
+            })
+        } else {
+          fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/index3?date=' + req.query.date)
+            .then(res => res.json())
+            .then((body) => {
+              res.send(body)
+            })
+        }
+      });
+  //}
 });
 
 router.get('/index2', (req, res) => {
@@ -600,31 +616,31 @@ router.get('/god', async (req, res) => {
     res.write(JSON.stringify(yearlist));
     res.end();
   });*/
-  if(req.query.format == "thtext"){
-        fetch('https://raw.githubusercontent.com/boyphongsakorn/testrepo/main/godthtext')
-        .then(res => res.json())
-        .then((body) => {
-            res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.write(JSON.stringify(body));
-            res.end();
-        })
-    }else if(req.query.format == "combothtext"){
-        fetch('https://raw.githubusercontent.com/boyphongsakorn/testrepo/main/godcombothtext')
-        .then(res => res.json())
-        .then((body) => {
-            res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.write(JSON.stringify(body));
-            res.end();
-        })
-    }else{
-        fetch('https://raw.githubusercontent.com/boyphongsakorn/testrepo/main/god')
-        .then(res => res.json())
-        .then((body) => {
-            res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.write(JSON.stringify(body));
-            res.end();
-        })
-    }
+  if (req.query.format == "thtext") {
+    fetch('https://raw.githubusercontent.com/boyphongsakorn/testrepo/main/godthtext')
+      .then(res => res.json())
+      .then((body) => {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.write(JSON.stringify(body));
+        res.end();
+      })
+  } else if (req.query.format == "combothtext") {
+    fetch('https://raw.githubusercontent.com/boyphongsakorn/testrepo/main/godcombothtext')
+      .then(res => res.json())
+      .then((body) => {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.write(JSON.stringify(body));
+        res.end();
+      })
+  } else {
+    fetch('https://raw.githubusercontent.com/boyphongsakorn/testrepo/main/god')
+      .then(res => res.json())
+      .then((body) => {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.write(JSON.stringify(body));
+        res.end();
+      })
+  }
   /*fetch('https://raw.githubusercontent.com/boyphongsakorn/testrepo/main/god')
     .then(res => res.json())
     .then((body) => {
@@ -876,102 +892,102 @@ router.get('/finddol', async (req, res) => {
 });
 
 router.get('/lotnews', async (req, res) => {
-    let arrayofnews = [0,0,0]
-    let check = req.query.count % 3
-    if (check != 0) {
-        if(check == 1){
-            //ceil number
-            arrayofnews[0] = Math.floor(req.query.count / 3)
-            arrayofnews[1] = Math.ceil(req.query.count / 3)
-            //floor number
-            arrayofnews[2] = Math.floor(req.query.count / 3)
-        }else{
-            //ceil number
-            arrayofnews[0] = Math.floor(req.query.count / 3)
-            arrayofnews[1] = Math.ceil(req.query.count / 3)
-            //floor number
-            arrayofnews[2] = Math.floor(req.query.count / 3)+1
-        }
-    }else{
-        arrayofnews[0] = req.query.count/ 3
-        arrayofnews[1] = req.query.count/ 3
-        arrayofnews[2] = req.query.count / 3
+  let arrayofnews = [0, 0, 0]
+  let check = req.query.count % 3
+  if (check != 0) {
+    if (check == 1) {
+      //ceil number
+      arrayofnews[0] = Math.floor(req.query.count / 3)
+      arrayofnews[1] = Math.ceil(req.query.count / 3)
+      //floor number
+      arrayofnews[2] = Math.floor(req.query.count / 3)
+    } else {
+      //ceil number
+      arrayofnews[0] = Math.floor(req.query.count / 3)
+      arrayofnews[1] = Math.ceil(req.query.count / 3)
+      //floor number
+      arrayofnews[2] = Math.floor(req.query.count / 3) + 1
     }
-    let array = [];
-    let response = await fetch('https://www.brighttv.co.th/tag/%e0%b9%80%e0%b8%a5%e0%b8%82%e0%b9%80%e0%b8%94%e0%b9%87%e0%b8%94/feed')
-    let xml = await response.text()
-    let $ = cheerio.load(xml)
-    let news = $('item')
-    //loop news 5 time and push to array
-    console.log(arrayofnews)
-    for (let i = 0; i < arrayofnews[0]; i++) {
-        const title = news.eq(i).find('title').text()
-        const link = news.eq(i).find('link')[0].next.data
-        const description = news.eq(i).find('description').text()
-        const pubDate = news.eq(i).find('pubDate').text()
-        /*const date = pubDate.slice(0, 10)
-        const time = pubDate.slice(11, 19)
-        const dateTime = date + ' ' + time*/
-        const json = {
-            title: title,
-            //remove \n and \t in string
-            link: link.replace(/\n|\t/g, ''),
-            description: description.substring(0, 100) + '...',
-            pubDate: pubDate,
-        }
-        array.push(json)
+  } else {
+    arrayofnews[0] = req.query.count / 3
+    arrayofnews[1] = req.query.count / 3
+    arrayofnews[2] = req.query.count / 3
+  }
+  let array = [];
+  let response = await fetch('https://www.brighttv.co.th/tag/%e0%b9%80%e0%b8%a5%e0%b8%82%e0%b9%80%e0%b8%94%e0%b9%87%e0%b8%94/feed')
+  let xml = await response.text()
+  let $ = cheerio.load(xml)
+  let news = $('item')
+  //loop news 5 time and push to array
+  console.log(arrayofnews)
+  for (let i = 0; i < arrayofnews[0]; i++) {
+    const title = news.eq(i).find('title').text()
+    const link = news.eq(i).find('link')[0].next.data
+    const description = news.eq(i).find('description').text()
+    const pubDate = news.eq(i).find('pubDate').text()
+    /*const date = pubDate.slice(0, 10)
+    const time = pubDate.slice(11, 19)
+    const dateTime = date + ' ' + time*/
+    const json = {
+      title: title,
+      //remove \n and \t in string
+      link: link.replace(/\n|\t/g, ''),
+      description: description.substring(0, 100) + '...',
+      pubDate: pubDate,
     }
+    array.push(json)
+  }
 
-    response = await fetch('https://www.khaosod.co.th/tag/%e0%b9%80%e0%b8%a5%e0%b8%82%e0%b9%80%e0%b8%94%e0%b9%87%e0%b8%94/feed')
-    xml = await response.text()
-    $ = cheerio.load(xml)
-    news = $('item')
-    //loop news 5 time and push to array
-    for (let i = 0; i < arrayofnews[1]; i++) {
-        const title = news.eq(i).find('title').text()
-        const link = news.eq(i).find('link')[0].next.data
-        const description = news.eq(i).find('description').text()
-        const pubDate = news.eq(i).find('pubDate').text()
-        // image
-        const image = news.eq(i).find('media\\:thumbnail').attr('url')
-        /*const date = pubDate.slice(0, 10)
-        const time = pubDate.slice(11, 19)
-        const dateTime = date + ' ' + time*/
-        const json = {
-            title: title,
-            //remove \n and \t in string
-            link: link.replace(/\n|\t/g, ''),
-            description: description.substring(0, 100) + '...',
-            image: image,
-            pubDate: pubDate,
-        }
-        array.push(json)
+  response = await fetch('https://www.khaosod.co.th/tag/%e0%b9%80%e0%b8%a5%e0%b8%82%e0%b9%80%e0%b8%94%e0%b9%87%e0%b8%94/feed')
+  xml = await response.text()
+  $ = cheerio.load(xml)
+  news = $('item')
+  //loop news 5 time and push to array
+  for (let i = 0; i < arrayofnews[1]; i++) {
+    const title = news.eq(i).find('title').text()
+    const link = news.eq(i).find('link')[0].next.data
+    const description = news.eq(i).find('description').text()
+    const pubDate = news.eq(i).find('pubDate').text()
+    // image
+    const image = news.eq(i).find('media\\:thumbnail').attr('url')
+    /*const date = pubDate.slice(0, 10)
+    const time = pubDate.slice(11, 19)
+    const dateTime = date + ' ' + time*/
+    const json = {
+      title: title,
+      //remove \n and \t in string
+      link: link.replace(/\n|\t/g, ''),
+      description: description.substring(0, 100) + '...',
+      image: image,
+      pubDate: pubDate,
     }
+    array.push(json)
+  }
 
-    response = await fetch('https://www.brighttv.co.th/tag/%E0%B8%AB%E0%B8%A7%E0%B8%A2%E0%B9%81%E0%B8%A1%E0%B9%88%E0%B8%99%E0%B9%89%E0%B8%B3%E0%B8%AB%E0%B8%99%E0%B8%B6%E0%B9%88%E0%B8%87/feed')
-    xml = await response.text()
-    $ = cheerio.load(xml)
-    news = $('item')
-    //loop news 5 time and push to array
-    for (let i = 0; i < arrayofnews[2]; i++) {
-        const title = news.eq(i).find('title').text()
-        const link = news.eq(i).find('link')[0].next.data
-        const description = news.eq(i).find('description').text()
-        const pubDate = news.eq(i).find('pubDate').text()
-        /*const date = pubDate.slice(0, 10)
-        const time = pubDate.slice(11, 19)
-        const dateTime = date + ' ' + time*/
-        const json = {
-            title: title,
-            //remove \n and \t in string
-            link: link.replace(/\n|\t/g, ''),
-            description: description.substring(0, 100) + '...',
-            pubDate: pubDate,
-        }
-        array.push(json)
+  response = await fetch('https://www.brighttv.co.th/tag/%E0%B8%AB%E0%B8%A7%E0%B8%A2%E0%B9%81%E0%B8%A1%E0%B9%88%E0%B8%99%E0%B9%89%E0%B8%B3%E0%B8%AB%E0%B8%99%E0%B8%B6%E0%B9%88%E0%B8%87/feed')
+  xml = await response.text()
+  $ = cheerio.load(xml)
+  news = $('item')
+  //loop news 5 time and push to array
+  for (let i = 0; i < arrayofnews[2]; i++) {
+    const title = news.eq(i).find('title').text()
+    const link = news.eq(i).find('link')[0].next.data
+    const description = news.eq(i).find('description').text()
+    const pubDate = news.eq(i).find('pubDate').text()
+    /*const date = pubDate.slice(0, 10)
+    const time = pubDate.slice(11, 19)
+    const dateTime = date + ' ' + time*/
+    const json = {
+      title: title,
+      //remove \n and \t in string
+      link: link.replace(/\n|\t/g, ''),
+      description: description.substring(0, 100) + '...',
+      pubDate: pubDate,
     }
+    array.push(json)
+  }
 
-    res.send(array)
+  res.send(array)
 })
 
 /*router.get('/another', (req, res) => res.json({ route: req.originalUrl }));
