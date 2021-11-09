@@ -22,6 +22,21 @@ function padLeadingZeros(num, size) {
 
 router.get('/', (req, res) => {
     var raw
+    if (req.query.date.substring(4, 8) == new Date().getFullYear() + 543) {
+    if (req.query.from !== undefined) {
+      fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/index3?date=' + req.query.date + '&from')
+        .then(res => res.json())
+        .then((body) => {
+          res.send(body)
+        })
+    } else {
+      fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/index3?date=' + req.query.date)
+        .then(res => res.json())
+        .then((body) => {
+          res.send(body)
+        })
+    }
+  } else {
     if (!req.query.date) {
         raw = JSON.stringify({
             date: padLeadingZeros(new Date().getDate(), 2),
@@ -130,6 +145,7 @@ router.get('/', (req, res) => {
                     })
             }
         });
+  }
 });
 
 router.get('/index2', (req, res) => {
