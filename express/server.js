@@ -137,13 +137,13 @@ router.get('/', (req, res) => {
           var thatdate = new Date(2010, 02 - 1, 16 + 1);
           if (date.getTime() === thatdate.getTime() || date < thatdate) {
             if (req.query.from !== undefined) {
-              fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/index3?date=' + req.query.date + '&from')
+              fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/index2?date=' + req.query.date + '&from')
                 .then(res => res.json())
                 .then((body) => {
                   res.send(body)
                 })
             } else {
-              fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/index3?date=' + req.query.date)
+              fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/index2?date=' + req.query.date)
                 .then(res => res.json())
                 .then((body) => {
                   res.send(body)
