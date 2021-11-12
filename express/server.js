@@ -134,7 +134,7 @@ router.get('/', (req, res) => {
           res.send(data)
         } else {
           var date = new Date(parseInt(req.query.date.substr(4, 4)) - 543, parseInt(req.query.date.substr(2, 2)) - 1, parseInt(req.query.date.substr(0, 2)) + 1);
-          var thatdate = new Date(2010, 02 - 1, 16 + 1);
+          var thatdate = new Date(2010, padLeadingZeros(2 - 1, 2), 16 + 1);
           if (date.getTime() === thatdate.getTime() || date < thatdate) {
             if (req.query.from !== undefined) {
               fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/index2?date=' + req.query.date + '&from')
