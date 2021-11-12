@@ -22,7 +22,7 @@ function padLeadingZeros(num, size) {
 
 router.get('/', (req, res) => {
   var raw
-  /*if (req.query.date.substring(4, 8) == new Date().getFullYear() + 543) {
+  if (req.query.date.substring(4, 8) == new Date().getFullYear() + 543) {
     if (req.query.from !== undefined) {
       fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/index3?date=' + req.query.date + '&from')
         .then(res => res.json())
@@ -36,7 +36,7 @@ router.get('/', (req, res) => {
           res.send(body)
         })
     }
-  } else {*/
+  } else {
   if (!req.query.date) {
     req.query.date = padLeadingZeros(new Date().getDate(), 2) + '' + padLeadingZeros((new Date().getMonth() + 1), 2) + '' + (new Date().getFullYear() + 543)
     raw = JSON.stringify({
@@ -162,7 +162,7 @@ router.get('/', (req, res) => {
           })
       }
     });
-  //}
+  }
 });
 
 router.get('/index2', (req, res) => {
