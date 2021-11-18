@@ -1025,8 +1025,10 @@ router.get('/lotnews', async (req, res) => {
     }
     array.push(json)
   }
-
-  res.send(array)
+  res.writeHead(200, { 'Content-Type': 'application/json' });
+  res.write(JSON.stringify(array));
+  res.end();
+  //res.send(array)
 })
 
 /*router.get('/another', (req, res) => res.json({ route: req.originalUrl }));
