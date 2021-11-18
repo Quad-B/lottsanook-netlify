@@ -131,7 +131,15 @@ router.get('/', (req, res) => {
 
             data[0][0] = req.query.date.substring(0, 2) + monthtext + req.query.date.substring(4, 8)
           }
-          res.send(data)
+          fs.writeFile('tmp/' + req.query.date + '.txt', JSON.stringify(data), function (err) {
+             if (err) throw err;
+             //console.log('Saved!');
+             if (req.query.from !== undefined) {
+                 data[0][0] = req.query.date.substring(0, 2) + monthtext + req.query.date.substring(4, 8)
+             }
+             res.send(data)
+          });
+          //res.send(data)
         } else {
           var date = new Date(parseInt(req.query.date.substr(4, 4)) - 543, parseInt(req.query.date.substr(2, 2)) - 1, parseInt(req.query.date.substr(0, 2)) + 1);
           var thatdate = new Date(2010, padLeadingZeros(2 - 1, 2), 16 + 1);
