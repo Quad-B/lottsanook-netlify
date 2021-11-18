@@ -39,99 +39,115 @@ router.get('/', (req, res) => {
   var date = new Date(parseInt(req.query.date.substr(4, 4)) - 543, parseInt(req.query.date.substr(2, 2)) - 1, parseInt(req.query.date.substr(0, 2)) + 1);
   var today = new Date();
   //if (req.query.date.substring(4, 8) == new Date().getFullYear() + 543) {
-  if (date.getTime() === today.getTime() || date > today) {
+  var fileContents = null;
+  try {
+    fileContents = fs.readFileSync('/tmp/' + req.query.date + '.txt');
+  } catch (err) {
+
+  }
+  if (fileContents) {
+    data = JSON.parse(fileContents)
     if (req.query.from !== undefined) {
-      fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/index3?date=' + req.query.date + '&from')
-        .then(res => res.json())
-        .then((body) => {
-          res.send(body)
-        })
-    } else {
-      fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/index3?date=' + req.query.date)
-        .then(res => res.json())
-        .then((body) => {
-          res.send(body)
-        })
+      data[0][0] = req.query.date.substring(0, 2) + monthtext + req.query.date.substring(4, 8)
     }
+    //res.send(data);
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.write(JSON.stringify(data));
+    res.end();
   } else {
-    var requestOptions = {
-      method: 'POST',
-      headers: { "Content-Type": "application/json" },
-      body: raw,
-      redirect: 'follow'
-    };
+    if (date.getTime() === today.getTime() || date > today) {
+      if (req.query.from !== undefined) {
+        fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/index3?date=' + req.query.date + '&from')
+          .then(res => res.json())
+          .then((body) => {
+            res.send(body)
+          })
+      } else {
+        fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/index3?date=' + req.query.date)
+          .then(res => res.json())
+          .then((body) => {
+            res.send(body)
+          })
+      }
+    } else {
+      var requestOptions = {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: raw,
+        redirect: 'follow'
+      };
 
-    fetch("https://www.glo.or.th/api/lottery/getLotteryAward", requestOptions)
-      .then(response => response.json())
-      .then(result => {
-        if (result["response"] != null) {
-          let data = [["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0], ["\u0e40\u0e25\u0e02\u0e2b\u0e19\u0e49\u0e323\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e223\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e222\u0e15\u0e31\u0e27", 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e02\u0e49\u0e32\u0e07\u0e40\u0e04\u0e35\u0e22\u0e07\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e482", 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e483", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e484", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e485", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-          data[0][1] = result["response"]["data"]["first"]["number"][0]["value"]
-          for (let [index, val] of result["response"]["data"]["last3f"]["number"].entries()) {
-            data[1][index + 1] = val["value"]
-          }
-          for (let [index, val] of result["response"]["data"]["last3b"]["number"].entries()) {
-            data[2][index + 1] = val["value"]
-          }
-          data[3][1] = result["response"]["data"]["last2"]["number"][0]["value"]
-          for (let [index, val] of result["response"]["data"]["near1"]["number"].entries()) {
-            data[4][index + 1] = val["value"]
-          }
-          for (let [index, val] of result["response"]["data"]["second"]["number"].entries()) {
-            data[5][index + 1] = val["value"]
-          }
-          for (let [index, val] of result["response"]["data"]["third"]["number"].entries()) {
-            data[6][index + 1] = val["value"]
-          }
-          for (let [index, val] of result["response"]["data"]["fourth"]["number"].entries()) {
-            data[7][index + 1] = val["value"]
-          }
-          for (let [index, val] of result["response"]["data"]["fifth"]["number"].entries()) {
-            data[8][index + 1] = val["value"]
-          }
-          if (req.query.from !== undefined) {
-            switch (req.query.date.substr(2, 2)) {
-              case '01':
-                monthtext = "มกราคม";
-                break;
-              case '02':
-                monthtext = "กุมภาพันธ์";
-                break;
-              case '03':
-                monthtext = "มีนาคม";
-                break;
-              case '04':
-                monthtext = "เมษายน";
-                break;
-              case '05':
-                monthtext = "พฤษภาคม";
-                break;
-              case '06':
-                monthtext = "มิถุนายน";
-                break;
-              case '07':
-                monthtext = "กรกฎาคม";
-                break;
-              case '08':
-                monthtext = "สิงหาคม";
-                break;
-              case '09':
-                monthtext = "กันยายน";
-                break;
-              case '10':
-                monthtext = "ตุลาคม";
-                break;
-              case '11':
-                monthtext = "พฤศจิกายน";
-                break;
-              case '12':
-                monthtext = "ธันวาคม";
-                break;
+      fetch("https://www.glo.or.th/api/lottery/getLotteryAward", requestOptions)
+        .then(response => response.json())
+        .then(result => {
+          if (result["response"] != null) {
+            let data = [["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0], ["\u0e40\u0e25\u0e02\u0e2b\u0e19\u0e49\u0e323\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e223\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e222\u0e15\u0e31\u0e27", 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e02\u0e49\u0e32\u0e07\u0e40\u0e04\u0e35\u0e22\u0e07\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e482", 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e483", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e484", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e485", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+            data[0][1] = result["response"]["data"]["first"]["number"][0]["value"]
+            for (let [index, val] of result["response"]["data"]["last3f"]["number"].entries()) {
+              data[1][index + 1] = val["value"]
             }
+            for (let [index, val] of result["response"]["data"]["last3b"]["number"].entries()) {
+              data[2][index + 1] = val["value"]
+            }
+            data[3][1] = result["response"]["data"]["last2"]["number"][0]["value"]
+            for (let [index, val] of result["response"]["data"]["near1"]["number"].entries()) {
+              data[4][index + 1] = val["value"]
+            }
+            for (let [index, val] of result["response"]["data"]["second"]["number"].entries()) {
+              data[5][index + 1] = val["value"]
+            }
+            for (let [index, val] of result["response"]["data"]["third"]["number"].entries()) {
+              data[6][index + 1] = val["value"]
+            }
+            for (let [index, val] of result["response"]["data"]["fourth"]["number"].entries()) {
+              data[7][index + 1] = val["value"]
+            }
+            for (let [index, val] of result["response"]["data"]["fifth"]["number"].entries()) {
+              data[8][index + 1] = val["value"]
+            }
+            if (req.query.from !== undefined) {
+              switch (req.query.date.substr(2, 2)) {
+                case '01':
+                  monthtext = "มกราคม";
+                  break;
+                case '02':
+                  monthtext = "กุมภาพันธ์";
+                  break;
+                case '03':
+                  monthtext = "มีนาคม";
+                  break;
+                case '04':
+                  monthtext = "เมษายน";
+                  break;
+                case '05':
+                  monthtext = "พฤษภาคม";
+                  break;
+                case '06':
+                  monthtext = "มิถุนายน";
+                  break;
+                case '07':
+                  monthtext = "กรกฎาคม";
+                  break;
+                case '08':
+                  monthtext = "สิงหาคม";
+                  break;
+                case '09':
+                  monthtext = "กันยายน";
+                  break;
+                case '10':
+                  monthtext = "ตุลาคม";
+                  break;
+                case '11':
+                  monthtext = "พฤศจิกายน";
+                  break;
+                case '12':
+                  monthtext = "ธันวาคม";
+                  break;
+              }
 
-            data[0][0] = req.query.date.substring(0, 2) + monthtext + req.query.date.substring(4, 8)
-          }
-          fs.appendFile('/tmp/' + req.query.date + '.txt', JSON.stringify(data), function (err) {
+              data[0][0] = req.query.date.substring(0, 2) + monthtext + req.query.date.substring(4, 8)
+            }
+            fs.appendFile('/tmp/' + req.query.date + '.txt', JSON.stringify(data), function (err) {
               if (err) throw err;
               //console.log('Saved!');
               if (req.query.from !== undefined) {
@@ -141,48 +157,49 @@ router.get('/', (req, res) => {
               res.writeHead(200, { 'Content-Type': 'application/json' });
               res.write(JSON.stringify(data));
               res.end();
-          });
-          //res.send(data)
-        } else {
-          var date = new Date(parseInt(req.query.date.substr(4, 4)) - 543, parseInt(req.query.date.substr(2, 2)) - 1, parseInt(req.query.date.substr(0, 2)) + 1);
-          var thatdate = new Date(2010, padLeadingZeros(2 - 1, 2), 16 + 1);
-          if (date.getTime() === thatdate.getTime() || date < thatdate) {
-            if (req.query.from !== undefined) {
-              fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/index2?date=' + req.query.date + '&from')
-                .then(res => res.json())
-                .then((body) => {
-                  res.send(body)
-                })
-            } else {
-              fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/index2?date=' + req.query.date)
-                .then(res => res.json())
-                .then((body) => {
-                  res.send(body)
-                })
-            }
+            });
+            //res.send(data)
           } else {
-            let data = [["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0], ["\u0e40\u0e25\u0e02\u0e2b\u0e19\u0e49\u0e323\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e223\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e222\u0e15\u0e31\u0e27", 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e02\u0e49\u0e32\u0e07\u0e40\u0e04\u0e35\u0e22\u0e07\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e482", 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e483", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e484", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e485", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-            res.send(data)
+            var date = new Date(parseInt(req.query.date.substr(4, 4)) - 543, parseInt(req.query.date.substr(2, 2)) - 1, parseInt(req.query.date.substr(0, 2)) + 1);
+            var thatdate = new Date(2010, padLeadingZeros(2 - 1, 2), 16 + 1);
+            if (date.getTime() === thatdate.getTime() || date < thatdate) {
+              if (req.query.from !== undefined) {
+                fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/index2?date=' + req.query.date + '&from')
+                  .then(res => res.json())
+                  .then((body) => {
+                    res.send(body)
+                  })
+              } else {
+                fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/index2?date=' + req.query.date)
+                  .then(res => res.json())
+                  .then((body) => {
+                    res.send(body)
+                  })
+              }
+            } else {
+              let data = [["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0], ["\u0e40\u0e25\u0e02\u0e2b\u0e19\u0e49\u0e323\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e223\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e222\u0e15\u0e31\u0e27", 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e02\u0e49\u0e32\u0e07\u0e40\u0e04\u0e35\u0e22\u0e07\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e482", 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e483", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e484", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e485", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+              res.send(data)
+            }
           }
-        }
-      })
-      .catch(error => {
-        /*let data = [["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0], ["\u0e40\u0e25\u0e02\u0e2b\u0e19\u0e49\u0e323\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e223\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e222\u0e15\u0e31\u0e27", 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e02\u0e49\u0e32\u0e07\u0e40\u0e04\u0e35\u0e22\u0e07\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e482", 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e483", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e484", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e485", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-        res.send(data)*/
-        if (req.query.from !== undefined) {
-          fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/index3?date=' + req.query.date + '&from')
-            .then(res => res.json())
-            .then((body) => {
-              res.send(body)
-            })
-        } else {
-          fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/index3?date=' + req.query.date)
-            .then(res => res.json())
-            .then((body) => {
-              res.send(body)
-            })
-        }
-      });
+        })
+        .catch(error => {
+          /*let data = [["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0], ["\u0e40\u0e25\u0e02\u0e2b\u0e19\u0e49\u0e323\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e223\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e222\u0e15\u0e31\u0e27", 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e02\u0e49\u0e32\u0e07\u0e40\u0e04\u0e35\u0e22\u0e07\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e482", 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e483", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e484", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e485", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+          res.send(data)*/
+          if (req.query.from !== undefined) {
+            fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/index3?date=' + req.query.date + '&from')
+              .then(res => res.json())
+              .then((body) => {
+                res.send(body)
+              })
+          } else {
+            fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/index3?date=' + req.query.date)
+              .then(res => res.json())
+              .then((body) => {
+                res.send(body)
+              })
+          }
+        });
+    }
   }
 });
 
