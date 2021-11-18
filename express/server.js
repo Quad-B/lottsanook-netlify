@@ -131,13 +131,16 @@ router.get('/', (req, res) => {
 
             data[0][0] = req.query.date.substring(0, 2) + monthtext + req.query.date.substring(4, 8)
           }
-          fs.writeFile('tmp/' + req.query.date + '.txt', JSON.stringify(data), function (err) {
-             if (err) throw err;
-             //console.log('Saved!');
-             if (req.query.from !== undefined) {
-                 data[0][0] = req.query.date.substring(0, 2) + monthtext + req.query.date.substring(4, 8)
-             }
-             res.send(data)
+          fs.appendFile('/tmp/' + req.query.date + '.txt', JSON.stringify(data), function (err) {
+              if (err) throw err;
+              //console.log('Saved!');
+              if (req.query.from !== undefined) {
+                data[0][0] = req.query.date.substring(0, 2) + monthtext + req.query.date.substring(4, 8)
+              }
+              //res.send(data)
+              res.writeHead(200, { 'Content-Type': 'application/json' });
+              res.write(JSON.stringify(data));
+              res.end();
           });
           //res.send(data)
         } else {
