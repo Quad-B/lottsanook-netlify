@@ -46,7 +46,7 @@ router.get('/', (req, res) => {
 
   }
   if (fileContents) {
-    data = JSON.parse(fileContents)
+    let data = JSON.parse(fileContents)
     if (req.query.from !== undefined) {
       data[0][0] = req.query.date.substring(0, 2) + monthtext + req.query.date.substring(4, 8)
     }
