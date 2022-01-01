@@ -792,11 +792,24 @@ router.get('/checklottery', (req, res) => {
 router.get('/lastlot', async (req, res) => {
   let lastdate
   let viewer
-  await fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/gdpy?year=' + (new Date().getFullYear() + 543))
+  await fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/gdpy?year=' + port + '/gdpy?year=' + (new Date().getFullYear() + 543))
+        .then(res => res.json())
+        .then((body) => {
+            lastdate = body[body.length - 1]
+        })
+    // if lastdate is null or undefined then fetch last year
+    if (lastdate == undefined || lastdate == null) {
+        await fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/gdpy?year=' + port + '/gdpy?year=' + (new Date().getFullYear() + 543 - 1))
+            .then(res => res.json())
+            .then((body) => {
+                lastdate = body[body.length - 1]
+            })
+    }
+  /*await fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/gdpy?year=' + (new Date().getFullYear() + 543))
     .then(res => res.json())
     .then((body) => {
       lastdate = body[body.length - 1]
-    })
+    })*/
   await fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/?date=' + lastdate)
     .then(res => res.json())
     .then((body) => {
