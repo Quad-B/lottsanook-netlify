@@ -154,7 +154,7 @@ router.get('/', (req, res) => {
                 data[0][0] = req.query.date.substring(0, 2) + monthtext + req.query.date.substring(4, 8)
               }
               //res.send(data)
-              res.writeHead(200, { 'Content-Type': 'application/json' });
+              res.writeHead(200, { 'Content-Type': 'application/json','origin-server': 'netlify' });
               res.write(JSON.stringify(data));
               res.end();
             });
@@ -822,11 +822,24 @@ router.get('/checklottery', (req, res) => {
 router.get('/lastlot', async (req, res) => {
   let lastdate
   let viewer
-  await fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/gdpy?year=' + (new Date().getFullYear() + 543))
+  await fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/gdpy?year=' + port + '/gdpy?year=' + (new Date().getFullYear() + 543))
+        .then(res => res.json())
+        .then((body) => {
+            lastdate = body[body.length - 1]
+        })
+    // if lastdate is null or undefined then fetch last year
+    if (lastdate == undefined || lastdate == null) {
+        await fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/gdpy?year=' + port + '/gdpy?year=' + (new Date().getFullYear() + 543 - 1))
+            .then(res => res.json())
+            .then((body) => {
+                lastdate = body[body.length - 1]
+            })
+    }
+  /*await fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/gdpy?year=' + (new Date().getFullYear() + 543))
     .then(res => res.json())
     .then((body) => {
       lastdate = body[body.length - 1]
-    })
+    })*/
   await fetch('https://practical-haibt-8f85b1.netlify.app/.netlify/functions/server/?date=' + lastdate)
     .then(res => res.json())
     .then((body) => {
