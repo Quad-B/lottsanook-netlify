@@ -430,14 +430,19 @@ router.get('/index3', (req, res) => {
         let data = [["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0], ["\u0e40\u0e25\u0e02\u0e2b\u0e19\u0e49\u0e323\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e223\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e222\u0e15\u0e31\u0e27", 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e02\u0e49\u0e32\u0e07\u0e40\u0e04\u0e35\u0e22\u0e07\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e482", 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e483", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e484", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e485", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
         let $ = cheerio.load(body)
 
-        data[0][1] = $('strong').toArray()[0].firstChild.data
-        data[1][1] = $('strong').toArray()[1].firstChild.data
-        data[1][2] = $('strong').toArray()[2].firstChild.data
-        data[2][1] = $('strong').toArray()[3].firstChild.data
-        data[2][2] = $('strong').toArray()[4].firstChild.data
-        data[3][1] = $('strong').toArray()[5].firstChild.data
-        data[4][1] = $('strong').toArray()[6].firstChild.data
-        data[4][2] = $('strong').toArray()[7].firstChild.data
+        let wow = 0
+        if ($('strong').toArray()[0].firstChild.data == 'เว็บไซต์นี้ใช้คุกกี้') {
+          wow = 1;
+        }
+
+        data[0][1] = $('strong').toArray()[0 + wow].firstChild.data
+        data[1][1] = $('strong').toArray()[1 + wow].firstChild.data
+        data[1][2] = $('strong').toArray()[2 + wow].firstChild.data
+        data[2][1] = $('strong').toArray()[3 + wow].firstChild.data
+        data[2][2] = $('strong').toArray()[4 + wow].firstChild.data
+        data[3][1] = $('strong').toArray()[5 + wow].firstChild.data
+        data[4][1] = $('strong').toArray()[6 + wow].firstChild.data
+        data[4][2] = $('strong').toArray()[7 + wow].firstChild.data
 
         let k = 5
         let i = 1
@@ -471,10 +476,35 @@ router.get('/index3', (req, res) => {
             }
           }
         }
-        if ($('div').toArray()[2].firstChild.data.match('~[0-9]+~')) {
-          fs.writeFile('/tmp/' + req.query.date + '.txt', JSON.stringify(data), function (err) {
-            if (err) throw err;
-            //console.log('Saved!');
+        try {
+          if ($('div').toArray()[2].firstChild.data.match('~[0-9]+~')) {
+            fs.writeFile('/tmp/' + req.query.date + '.txt', JSON.stringify(data), function (err) {
+              if (err) throw err;
+              //console.log('Saved!');
+              if (req.query.from !== undefined) {
+                switch (req.query.date.substr(2, 2)) {
+                  case '01': monthtext = "มกราคม"; break;
+                  case '02': monthtext = "กุมภาพันธ์"; break;
+                  case '03': monthtext = "มีนาคม"; break;
+                  case '04': monthtext = "เมษายน"; break;
+                  case '05': monthtext = "พฤษภาคม"; break;
+                  case '06': monthtext = "มิถุนายน"; break;
+                  case '07': monthtext = "กรกฎาคม"; break;
+                  case '08': monthtext = "สิงหาคม"; break;
+                  case '09': monthtext = "กันยายน"; break;
+                  case '10': monthtext = "ตุลาคม"; break;
+                  case '11': monthtext = "พฤศจิกายน"; break;
+                  case '12': monthtext = "ธันวาคม"; break;
+                }
+
+                data[0][0] = req.query.date.substring(0, 2) + monthtext + req.query.date.substring(4, 8)
+              }
+              //res.send(data)
+              res.writeHead(200, { 'Content-Type': 'application/json' });
+              res.write(JSON.stringify(data));
+              res.end();
+            });
+          } else {
             if (req.query.from !== undefined) {
               switch (req.query.date.substr(2, 2)) {
                 case '01': monthtext = "มกราคม"; break;
@@ -497,8 +527,8 @@ router.get('/index3', (req, res) => {
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.write(JSON.stringify(data));
             res.end();
-          });
-        } else {
+          }
+        } catch (error) {
           if (req.query.from !== undefined) {
             switch (req.query.date.substr(2, 2)) {
               case '01': monthtext = "มกราคม"; break;
