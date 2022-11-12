@@ -1324,7 +1324,8 @@ router.post('/', (req, res) => res.json({ postBody: req.body }));*/
 
 app.use(bodyParser.json());
 app.use('/.netlify/functions/server', router);  // path must route to lambda
-app.use('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));
+app.use('/', router);
+//app.use('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));
 app.use('/index2', (req, res) => res.sendFile(path.join(__dirname, '../index2.html')));
 app.use('/reto', (req, res) => res.sendFile(path.join(__dirname, '../reto.html')));
 
