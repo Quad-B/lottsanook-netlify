@@ -1136,7 +1136,7 @@ router.get('/lotnews', async (req, res) => {
       pubDate: pubDate,
     }
     //if new Date(pubDate) < date push to array
-    if (request.query.lastweek) {
+    if (req.query.lastweek) {
       if (new Date(pubDate) > date) {
         array.push(json)
       }
@@ -1197,7 +1197,7 @@ router.get('/lotnews', async (req, res) => {
       pubDate: event.toUTCString(),
     }
     //if new Date(pubDate) < date push to array
-    if (request.query.lastweek) {
+    if (req.query.lastweek) {
       if (event > date) {
         array.push(json)
       }
@@ -1304,7 +1304,7 @@ router.get('/lotnews', async (req, res) => {
         pubDate: pubDate,
       }
       //if new Date(pubDate) < date push to array
-      if (request.query.lastweek) {
+      if (req.query.lastweek) {
         if (new Date(pubDate) > date) {
           array.push(json)
         }
