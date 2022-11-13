@@ -1314,6 +1314,17 @@ router.get('/lotnews', async (req, res) => {
     }
   }
 
+  array.sort((a, b) => {
+    return new Date(b.pubDate) - new Date(a.pubDate)
+  })
+
+  //get only count of array
+  if (count) {
+    array = array.slice(0, count)
+  } else {
+    array = array.slice(0, 10)
+  }
+
   res.writeHead(200, { 'Content-Type': 'application/json' });
   res.write(JSON.stringify(array));
   res.end();
