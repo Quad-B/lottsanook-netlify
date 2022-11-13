@@ -1103,7 +1103,7 @@ router.get('/lotnews', async (req, res) => {
   for (let i = 0; i < arrayofnews[0]; i++) {
     const title = news.eq(i).find('title').text()
     const link = news.eq(i).find('link')[0].next.data
-    const description = news.eq(i).find('description').text()
+    let description = news.eq(i).find('description').text()
     if (fulldesc == 'true') {
       const content = news.eq(i).find('content\\:encoded').text()
       description = content.replace(/]]>/g, '')
@@ -1324,8 +1324,8 @@ router.post('/', (req, res) => res.json({ postBody: req.body }));*/
 
 app.use(bodyParser.json());
 app.use('/.netlify/functions/server', router);  // path must route to lambda
-app.use('/', router);
-//app.use('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));
+//app.use('/', router);
+app.use('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));
 app.use('/index2', (req, res) => res.sendFile(path.join(__dirname, '../index2.html')));
 app.use('/reto', (req, res) => res.sendFile(path.join(__dirname, '../reto.html')));
 
