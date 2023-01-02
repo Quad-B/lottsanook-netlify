@@ -1093,6 +1093,8 @@ router.get('/lotnews', async (req, res) => {
     arrayofnews[2] = count
     arrayofnews[3] = count
   }
+  //start timer
+  let start = new Date()
   let array = [];
   let response = await fetch('https://www.brighttv.co.th/tag/%e0%b9%80%e0%b8%a5%e0%b8%82%e0%b9%80%e0%b8%94%e0%b9%87%e0%b8%94/feed')
   let xml = await response.text()
@@ -1229,87 +1231,93 @@ router.get('/lotnews', async (req, res) => {
     array.push(json)
   }
 
-  response = await fetch('https://www.bangkokbiznews.com/tags/%E0%B9%80%E0%B8%A5%E0%B8%82%E0%B9%80%E0%B8%94%E0%B9%87%E0%B8%94');
-  $ = cheerio.load(await response.text());
-  const a = $('a.card-wrapper');
-  for (let i = 0; i < arrayofnews[3]; i++) {
-    //if h3 class card-v-content-title text-excerpt-2
-    if ($(a[i]).find('h3').attr('class') === 'card-v-content-title  text-excerpt-2' && !$(a[i]).find('h3').text().includes('ตรวจหวย')) {
-      const title = $(a[i]).find('h3').text()
-      const link = 'https://www.bangkokbiznews.com' + $(a[i]).attr('href')
-      let description
-      const image = $(a[i]).find('img').attr('src')
-      const date = $(a[i]).find('span.date').text().split('|');
-      let time = date[1].trim().split(':')[0].padStart(2, '0') + ':' + date[1].trim().split(':')[1].padStart(2, '0');
-      let number = '';
-      switch (date[0].split(' ')[1]) {
-        case 'ม.ค.':
-          number = '01';
-          break;
-        case 'ก.พ.':
-          number = '02';
-          break;
-        case 'มี.ค.':
-          number = '03';
-          break;
-        case 'เม.ย.':
-          number = '04';
-          break;
-        case 'พ.ค.':
-          number = '05';
-          break;
-        case 'มิ.ย.':
-          number = '06';
-          break;
-        case 'ก.ค.':
-          number = '07';
-          break;
-        case 'ส.ค.':
-          number = '08';
-          break;
-        case 'ก.ย.':
-          number = '09';
-          break;
-        case 'ต.ค.':
-          number = '10';
-          break;
-        case 'พ.ย.':
-          number = '11';
-          break;
-        case 'ธ.ค.':
-          number = '12';
-          break;
-      }
-      let vertdate = new Date(parseInt(date[0].split(' ')[2]) - 543 + '-' + number + '-' + date[0].split(' ')[0] + 'T' + time + ':00Z');
-      const pubDate = vertdate.toUTCString()
-      const content = await fetch(link);
-      const $$ = cheerio.load(await content.text());
-      const div = $$('div.content-detail');
-      for (let j = 0; j < div.length; j++) {
-        if ($(div[j]).attr('class') === 'content-detail') {
-          if (fulldesc == 'true') {
-            description = $(div[j]).text().replace(/\r?\n|\r/g, '')
-          } else {
-            //remove new line from description
-            description = $(div[j]).text().replace(/\r?\n|\r/g, '')
-            description = description.substring(0, 100) + '...'
+  //end timer
+  const end = new Date()
+  const time = end - start
+  //if time > 10 sec skip
+  if (time < 10000) {
+    response = await fetch('https://www.bangkokbiznews.com/tags/%E0%B9%80%E0%B8%A5%E0%B8%82%E0%B9%80%E0%B8%94%E0%B9%87%E0%B8%94');
+    $ = cheerio.load(await response.text());
+    const a = $('a.card-wrapper');
+    for (let i = 0; i < arrayofnews[3]; i++) {
+      //if h3 class card-v-content-title text-excerpt-2
+      if ($(a[i]).find('h3').attr('class') === 'card-v-content-title  text-excerpt-2' && !$(a[i]).find('h3').text().includes('ตรวจหวย')) {
+        const title = $(a[i]).find('h3').text()
+        const link = 'https://www.bangkokbiznews.com' + $(a[i]).attr('href')
+        let description
+        const image = $(a[i]).find('img').attr('src')
+        const date = $(a[i]).find('span.date').text().split('|');
+        let time = date[1].trim().split(':')[0].padStart(2, '0') + ':' + date[1].trim().split(':')[1].padStart(2, '0');
+        let number = '';
+        switch (date[0].split(' ')[1]) {
+          case 'ม.ค.':
+            number = '01';
+            break;
+          case 'ก.พ.':
+            number = '02';
+            break;
+          case 'มี.ค.':
+            number = '03';
+            break;
+          case 'เม.ย.':
+            number = '04';
+            break;
+          case 'พ.ค.':
+            number = '05';
+            break;
+          case 'มิ.ย.':
+            number = '06';
+            break;
+          case 'ก.ค.':
+            number = '07';
+            break;
+          case 'ส.ค.':
+            number = '08';
+            break;
+          case 'ก.ย.':
+            number = '09';
+            break;
+          case 'ต.ค.':
+            number = '10';
+            break;
+          case 'พ.ย.':
+            number = '11';
+            break;
+          case 'ธ.ค.':
+            number = '12';
+            break;
+        }
+        let vertdate = new Date(parseInt(date[0].split(' ')[2]) - 543 + '-' + number + '-' + date[0].split(' ')[0] + 'T' + time + ':00Z');
+        const pubDate = vertdate.toUTCString()
+        const content = await fetch(link);
+        const $$ = cheerio.load(await content.text());
+        const div = $$('div.content-detail');
+        for (let j = 0; j < div.length; j++) {
+          if ($(div[j]).attr('class') === 'content-detail') {
+            if (fulldesc == 'true') {
+              description = $(div[j]).text().replace(/\r?\n|\r/g, '')
+            } else {
+              //remove new line from description
+              description = $(div[j]).text().replace(/\r?\n|\r/g, '')
+              description = description.substring(0, 100) + '...'
+            }
           }
         }
-      }
-      const json = {
-        title: title,
-        link: link,
-        description: description,
-        image: image,
-        pubDate: pubDate,
-      }
-      //if new Date(pubDate) < date push to array
-      if (req.query.lastweek) {
-        if (new Date(pubDate) > date) {
+        const json = {
+          title: title,
+          link: link,
+          description: description,
+          image: image,
+          pubDate: pubDate,
+        }
+        //if new Date(pubDate) < date push to array
+        if (req.query.lastweek) {
+          if (new Date(pubDate) > date) {
+            array.push(json)
+          }
+        } else {
           array.push(json)
         }
-      } else {
-        array.push(json)
       }
     }
   }
