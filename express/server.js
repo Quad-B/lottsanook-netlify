@@ -7,7 +7,8 @@ const bodyParser = require('body-parser');
 
 require('encoding');
 
-const fetch = require('node-fetch').default;
+// const fetch = require('node-fetch').default;
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const cheerio = require('cheerio');
 var fs = require('fs');
 
