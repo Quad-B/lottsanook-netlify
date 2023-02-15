@@ -1320,6 +1320,15 @@ router.get('/lotnews', async (req, res) => {
         }
       }
     }
+  }else {
+    //get raw url and change from lotapi3.pwisetthon.com to lotapi.pwisetthon.com
+    const rawurl = request.raw.url;
+    //const mainapi = await fetch('https://lotapi.pwisetthon.com' + rawurl);
+    const mainapi = await fetch('https://lottsanook-cfworker.boy1556.workers.dev' + rawurl);
+    const mainapibody = await mainapi.json();
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.write(mainapibody);
+    res.end();
   }
 
   array.sort((a, b) => {
