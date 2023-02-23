@@ -32,7 +32,7 @@
   "devDependencies": {
     "body-parser": "^1.20.1",
     "express": "^4.18.2",
-    "netlify-lambda": "^2.0.16",
+    "netlify-lambda": "1.6.3",
     "nodemon": "^2.0.20",
     "serverless-http": "^3.1.1"
   }
