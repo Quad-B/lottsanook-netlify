@@ -24,10 +24,14 @@
   },
   "homepage": "https://github.com/neverendingqs/netlify-express#readme",
   "dependencies": {
+    "@netlify/functions": "^5.2.0",
+    "@types/express": "^5.0.6",
     "cheerio": "^1.0.0-rc.12",
     "encoding": "^0.1.13",
+    "express": "^5.2.1",
     "follow-redirects": "^1.15.6",
-    "node-fetch": "^2.6.7"
+    "node-fetch": "^2.6.7",
+    "serverless-http": "^4.0.0"
   },
   "devDependencies": {
     "body-parser": "^2.2.1",
