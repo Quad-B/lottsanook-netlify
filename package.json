@@ -29,7 +29,7 @@
     "cheerio": "^1.0.0-rc.12",
     "encoding": "^0.1.13",
     "express": "^5.2.1",
-    "follow-redirects": "^1.15.6",
+    "follow-redirects": "^1.16.0",
     "node-fetch": "^2.6.7",
     "serverless-http": "^4.0.0"
   },

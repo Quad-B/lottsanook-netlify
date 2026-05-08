@@ -24,7 +24,7 @@ importers:
         specifier: ^5.2.1
         version: 5.2.1
       follow-redirects:
-        specifier: ^1.15.6
+        specifier: ^1.16.0
         version: 1.16.0
       node-fetch:
         specifier: ^2.6.7
